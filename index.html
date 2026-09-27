@@ -1,726 +1,231 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DailyFlow | Task Manager</title>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0">
 
-    <style>
-        :root {
-            --bg: #f4f6fb;
-            --card: #ffffff;
-            --text: #20243a;
-            --muted: #687189;
-            --border: #e2e6ef;
-            --primary: #6557dc;
-        }
+        <title>sanjeev kumar | portfolio</title>
 
-        body.dark {
-            --bg: #111827;
-            --card: #202a3b;
-            --text: #f3f5ff;
-            --muted: #b5bfd0;
-            --border: #3a4558;
-            --primary: #a397ff;
-        }
+        <link rel="stylesheet" href="style.css">
+    </head>
 
-        * {
-            box-sizing: border-box;
-        }
+    <body>
 
-        body {
-            margin: 0;
-            background: var(--bg);
-            color: var(--text);
-            font-family: Arial, sans-serif;
-            line-height: 1.5;
-        }
+        <!--navbar-->
+       <header class="site-header">
+    <nav class="navbar" aria-label="Main navigation">
+        <a href="#home" class="logo">Sanjeev Kumar<span>.</span></a>
 
-        button,
-        input,
-        select {
-            font: inherit;
-        }
-
-        button {
-            cursor: pointer;
-        }
-
-        .container {
-            width: min(1050px, calc(100% - 28px));
-            margin: auto;
-            padding: 25px 0 60px;
-        }
-
-        .topbar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-            margin-bottom: 22px;
-        }
-
-        .logo {
-            margin: 0;
-            font-size: 1.5rem;
-            color: var(--primary);
-        }
-
-        .hero {
-            padding: 30px;
-            border-radius: 20px;
-            color: white;
-            background: linear-gradient(120deg, #5143c8, #8167e2, #bc72bd);
-        }
-
-        .hero h1 {
-            margin: 0 0 8px;
-        }
-
-        .hero p {
-            margin: 0;
-        }
-
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 14px;
-            margin: 20px 0;
-        }
-
-        .stat,
-        .panel {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            box-shadow: 0 8px 24px rgba(28, 34, 74, 0.06);
-        }
-
-        .stat {
-            padding: 18px;
-        }
-
-        .stat strong {
-            display: block;
-            font-size: 1.8rem;
-        }
-
-        .stat span,
-        .note,
-        .task-info {
-            color: var(--muted);
-        }
-
-        .panel {
-            padding: 24px;
-            margin-top: 20px;
-        }
-
-        .panel h2 {
-            margin-top: 0;
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 14px;
-        }
-
-        .field {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .field.full,
-        .form-buttons {
-            grid-column: 1 / -1;
-        }
-
-        label {
-            font-weight: bold;
-            font-size: 0.9rem;
-        }
-
-        input,
-        select {
-            width: 100%;
-            min-width: 0;
-            padding: 11px;
-            border: 1px solid var(--border);
-            border-radius: 9px;
-            background: var(--card);
-            color: var(--text);
-        }
-
-        .form-buttons,
-        .task-buttons {
-            display: flex;
-            gap: 9px;
-        }
-
-        .btn {
-            border: 0;
-            border-radius: 9px;
-            padding: 10px 16px;
-            font-weight: bold;
-        }
-
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-        }
-
-        .btn-light {
-            background: var(--bg);
-            color: var(--text);
-        }
-
-        .btn-danger {
-            color: #d74760;
-        }
-
-        .filters {
-            display: grid;
-            grid-template-columns: 1fr 160px 160px;
-            gap: 10px;
-            margin-bottom: 18px;
-        }
-
-        .task-list {
-            display: grid;
-            gap: 12px;
-        }
-
-        .task {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            padding: 16px;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-        }
-
-        .task-checkbox {
-            width: 20px;
-            height: 20px;
-            margin-top: 3px;
-            accent-color: var(--primary);
-        }
-
-        .task-content {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .task-content h3 {
-            margin: 0;
-            overflow-wrap: anywhere;
-        }
-
-        .task.completed h3 {
-            text-decoration: line-through;
-            color: var(--muted);
-        }
-
-        .task-info {
-            margin-top: 6px;
-            font-size: 0.85rem;
-        }
-
-        .task-buttons .btn {
-            padding: 7px 10px;
-            font-size: 0.85rem;
-        }
-
-        .empty {
-            padding: 35px;
-            border: 1px dashed var(--border);
-            border-radius: 12px;
-            color: var(--muted);
-            text-align: center;
-        }
-
-        .error {
-            min-height: 20px;
-            color: #d74760;
-            font-size: 0.9rem;
-        }
-
-        .note {
-            font-size: 0.85rem;
-        }
-
-        @media (max-width: 650px) {
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .filters {
-                grid-template-columns: 1fr 1fr;
-            }
-
-            .filters input {
-                grid-column: 1 / -1;
-            }
-
-            .stat {
-                padding: 11px;
-            }
-
-            .stat strong {
-                font-size: 1.3rem;
-            }
-
-            .stat span {
-                font-size: 0.75rem;
-            }
-
-            .panel {
-                padding: 16px;
-            }
-
-            .task {
-                flex-wrap: wrap;
-            }
-
-            .task-buttons {
-                margin-left: 32px;
-            }
-        }
-    </style>
-</head>
-
-<body>
-    <main class="container">
-        <header class="topbar">
-            <h1 class="logo">✓ DailyFlow</h1>
-            <button id="themeButton" class="btn btn-light" type="button">
-                🌙 Dark mode
-            </button>
+        <ul class="nav-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#education">Education</a></li>
+            <li><a href="#contect" class="contact-link">Contact</a></li>
+        </ul>
+        </nav>
         </header>
 
-        <div class="hero">
-            <h1>Make today count.</h1>
-            <p>Plan your tasks and track your daily progress.</p>
-        </div>
 
-        <div class="stats">
-            <div class="stat">
-                <strong id="totalCount">0</strong>
-                <span>Total tasks</span>
-            </div>
-            <div class="stat">
-                <strong id="pendingCount">0</strong>
-                <span>Pending</span>
-            </div>
-            <div class="stat">
-                <strong id="completedCount">0</strong>
-                <span>Completed</span>
-            </div>
-        </div>
+        <!--Home-->
+        <section id="home" class="hero">
+            <div class="hero-text">
+                <p class="hello"> Hello, I'm</p>
 
-        <section class="panel">
-            <h2 id="formHeading">Add a task</h2>
+                <h1>Sanjeev kumar</h1>
 
-            <form id="taskForm">
-                <div class="form-grid">
-                    <div class="field full">
-                        <label for="taskTitle">Task title *</label>
-                        <input
-                            id="taskTitle"
-                            type="text"
-                            maxlength="120"
-                            placeholder="e.g. Complete assignment"
-                            required
-                        >
-                    </div>
+                <h2>
+                   <span id="typing-text"></span> 
+                </h2>
 
-                    <div class="field">
-                        <label for="taskCategory">Category</label>
-                        <select id="taskCategory">
-                            <option>Personal</option>
-                            <option>Study</option>
-                            <option>Work</option>
-                            <option>Other</option>
-                        </select>
-                    </div>
+                <p>
+                    I am a passionate developer insterested in python,
+                    Web Development, Machine Learning and modern technologies.
+                </p>
 
-                    <div class="field">
-                        <label for="taskPriority">Priority</label>
-                        <select id="taskPriority">
-                            <option>Medium</option>
-                            <option>Low</option>
-                            <option>High</option>
-                        </select>
-                    </div>
-
-                    <div class="field">
-                        <label for="taskDate">Due date</label>
-                        <input id="taskDate" type="date">
-                    </div>
-
-                    <div class="form-buttons">
-                        <button
-                            id="saveButton"
-                            class="btn btn-primary"
-                            type="submit"
-                        >
-                            Add task
-                        </button>
-
-                        <button
-                            id="cancelButton"
-                            class="btn btn-light"
-                            type="button"
-                            hidden
-                        >
-                            Cancel edit
-                        </button>
-                    </div>
+                <div class="buttons">
+                    <a href="#projects" class="btn">
+                        View Projects
+                    </a>
+                    <a href="Resume.pdf"
+                    class="btn secondary"
+                    target="_blank">
+                    Download CV
+                </a>
                 </div>
-
-                <p id="errorMessage" class="error" role="alert"></p>
-            </form>
-        </section>
-
-        <section class="panel">
-            <h2>Your tasks</h2>
-
-            <div class="filters">
-                <input
-                    id="searchInput"
-                    type="search"
-                    placeholder="Search tasks..."
-                    aria-label="Search tasks"
-                >
-
-                <select id="statusFilter" aria-label="Filter by status">
-                    <option value="all">All statuses</option>
-                    <option value="pending">Pending</option>
-                    <option value="completed">Completed</option>
-                </select>
-
-                <select id="categoryFilter" aria-label="Filter by category">
-                    <option value="all">All categories</option>
-                    <option>Personal</option>
-                    <option>Study</option>
-                    <option>Work</option>
-                    <option>Other</option>
-                </select>
             </div>
 
-            <div id="taskList" class="task-list"></div>
+            <div class="Profile">
+                <div class="Profile-circle">
+                    <img src="sanjeev kumar.jpg" alt="sanjeev kumar">
+                </div>
+            </div>
 
-            <p class="note">
-                Tasks are saved in this browser using Local Storage.
-            </p>
+
         </section>
-    </main>
-
-    <script>
-        const STORAGE_KEY = "dailyflow_tasks";
-        const THEME_KEY = "dailyflow_theme";
-
-        const taskForm = document.getElementById("taskForm");
-        const taskList = document.getElementById("taskList");
-        const errorMessage = document.getElementById("errorMessage");
-
-        let tasks = [];
-        let editingId = null;
-
-        try {
-            const savedTasks = JSON.parse(
-                localStorage.getItem(STORAGE_KEY) || "[]"
-            );
-
-            if (Array.isArray(savedTasks)) {
-                tasks = savedTasks;
-            }
-        } catch (error) {
-            tasks = [];
-        }
-
-        function saveTasks() {
-            try {
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
-                return true;
-            } catch (error) {
-                errorMessage.textContent =
-                    "Tasks save nahi ho paaye. Browser storage check karein.";
-                return false;
-            }
-        }
-
-        function resetForm() {
-            taskForm.reset();
-            editingId = null;
-
-            document.getElementById("formHeading").textContent =
-                "Add a task";
-            document.getElementById("saveButton").textContent =
-                "Add task";
-            document.getElementById("cancelButton").hidden = true;
-            errorMessage.textContent = "";
-        }
-
-        function renderTasks() {
-            const completed = tasks.filter(
-                task => task.completed
-            ).length;
-
-            document.getElementById("totalCount").textContent =
-                tasks.length;
-            document.getElementById("completedCount").textContent =
-                completed;
-            document.getElementById("pendingCount").textContent =
-                tasks.length - completed;
-
-            const search = document.getElementById("searchInput")
-                .value.trim().toLowerCase();
-
-            const status = document.getElementById("statusFilter").value;
-            const category = document.getElementById("categoryFilter").value;
-
-            const visibleTasks = tasks.filter(task => {
-                const matchesSearch = task.title
-                    .toLowerCase()
-                    .includes(search);
-
-                const matchesStatus =
-                    status === "all" ||
-                    (status === "completed" && task.completed) ||
-                    (status === "pending" && !task.completed);
-
-                const matchesCategory =
-                    category === "all" ||
-                    category === task.category;
-
-                return matchesSearch &&
-                    matchesStatus &&
-                    matchesCategory;
-            });
-
-            taskList.replaceChildren();
-
-            if (visibleTasks.length === 0) {
-                const empty = document.createElement("div");
-                empty.className = "empty";
-
-                empty.textContent = tasks.length === 0
-                    ? "No tasks yet. Add your first task!"
-                    : "No tasks match your search or filters.";
-
-                taskList.appendChild(empty);
-                return;
-            }
-
-            visibleTasks.forEach(task => {
-                const row = document.createElement("article");
-                row.className = task.completed
-                    ? "task completed"
-                    : "task";
-
-                const checkbox = document.createElement("input");
-                checkbox.type = "checkbox";
-                checkbox.className = "task-checkbox";
-                checkbox.checked = task.completed;
-                checkbox.setAttribute(
-                    "aria-label",
-                    "Toggle completion: " + task.title
-                );
-
-                checkbox.addEventListener("change", () => {
-                    const oldValue = task.completed;
-                    task.completed = checkbox.checked;
-
-                    if (!saveTasks()) {
-                        task.completed = oldValue;
-                    }
-
-                    renderTasks();
-                });
-
-                const content = document.createElement("div");
-                content.className = "task-content";
-
-                const title = document.createElement("h3");
-                title.textContent = task.title;
-
-                const info = document.createElement("div");
-                info.className = "task-info";
-                info.textContent =
-                    task.category +
-                    " • " +
-                    task.priority +
-                    " priority" +
-                    (task.date ? " • Due " + task.date : "");
-
-                content.append(title, info);
-
-                const buttons = document.createElement("div");
-                buttons.className = "task-buttons";
-
-                const editButton = document.createElement("button");
-                editButton.type = "button";
-                editButton.className = "btn btn-light";
-                editButton.textContent = "Edit";
-                editButton.addEventListener("click", () => {
-                    startEdit(task.id);
-                });
-
-                const deleteButton = document.createElement("button");
-                deleteButton.type = "button";
-                deleteButton.className = "btn btn-light btn-danger";
-                deleteButton.textContent = "Delete";
-                deleteButton.addEventListener("click", () => {
-                    deleteTask(task.id);
-                });
-
-                buttons.append(editButton, deleteButton);
-                row.append(checkbox, content, buttons);
-                taskList.appendChild(row);
-            });
-        }
-
-        function startEdit(id) {
-            const task = tasks.find(item => item.id === id);
-            if (!task) return;
-
-            editingId = id;
-
-            document.getElementById("taskTitle").value = task.title;
-            document.getElementById("taskCategory").value = task.category;
-            document.getElementById("taskPriority").value = task.priority;
-            document.getElementById("taskDate").value = task.date;
-
-            document.getElementById("formHeading").textContent =
-                "Edit task";
-            document.getElementById("saveButton").textContent =
-                "Save changes";
-            document.getElementById("cancelButton").hidden = false;
-
-            document.getElementById("taskTitle").focus();
-            taskForm.scrollIntoView({
-                behavior: "smooth",
-                block: "center"
-            });
-        }
-
-        function deleteTask(id) {
-            const task = tasks.find(item => item.id === id);
-            if (!task) return;
-
-            if (!confirm(`Delete "${task.title}"?`)) return;
-
-            const previousTasks = tasks;
-            tasks = tasks.filter(item => item.id !== id);
-
-            if (!saveTasks()) {
-                tasks = previousTasks;
-            } else if (editingId === id) {
-                resetForm();
-            }
-
-            renderTasks();
-        }
-
-        taskForm.addEventListener("submit", event => {
-            event.preventDefault();
-
-            const title = document.getElementById("taskTitle")
-                .value.trim();
-
-            if (!title || title.length > 120) {
-                errorMessage.textContent =
-                    "Task title 1 se 120 characters ka hona chahiye.";
-                return;
-            }
-
-            const taskData = {
-                title: title,
-                category: document.getElementById(
-                    "taskCategory"
-                ).value,
-                priority: document.getElementById(
-                    "taskPriority"
-                ).value,
-                date: document.getElementById("taskDate").value
-            };
-
-            const previousTasks = tasks.map(task => ({ ...task }));
-
-            if (editingId !== null) {
-                const task = tasks.find(
-                    item => item.id === editingId
-                );
-
-                if (!task) {
-                    resetForm();
-                    return;
-                }
-
-                Object.assign(task, taskData);
-            } else {
-                tasks.unshift({
-                    id: Date.now().toString() +
-                        Math.random().toString(16),
-                    ...taskData,
-                    completed: false
-                });
-            }
-
-            if (!saveTasks()) {
-                tasks = previousTasks;
-                return;
-            }
-
-            resetForm();
-            renderTasks();
-        });
-
-        document.getElementById("cancelButton")
-            .addEventListener("click", resetForm);
-
-        document.getElementById("searchInput")
-            .addEventListener("input", renderTasks);
-
-        document.getElementById("statusFilter")
-            .addEventListener("change", renderTasks);
-
-        document.getElementById("categoryFilter")
-            .addEventListener("change", renderTasks);
-
-        const themeButton = document.getElementById("themeButton");
-
-        function setTheme(isDark) {
-            document.body.classList.toggle("dark", isDark);
-
-            themeButton.textContent = isDark
-                ? "☀️ Light mode"
-                : "🌙 Dark mode";
-
-            try {
-                localStorage.setItem(
-                    THEME_KEY,
-                    isDark ? "dark" : "light"
-                );
-            } catch (error) {
-                // App still works if browser storage is unavailable.
-            }
-        }
-
-        try {
-            setTheme(localStorage.getItem(THEME_KEY) === "dark");
-        } catch (error) {
-            setTheme(false);
-        }
-
-        themeButton.addEventListener("click", () => {
-            setTheme(!document.body.classList.contains("dark"));
-        });
-
-        renderTasks();
-    </script>
-</body>
+
+
+        <!--About-->
+
+        <section id="about">
+            <h2 class="section-title">About Me</h2>
+
+            <div class="about-content">
+                <p>
+                    I am a passionate computer science student and developer.
+                    I enjoy creating websites, learning programming languages
+                    and working on Machine learning Projects.
+                </p>
+                <p>
+                    My goal is to continuously improve my technical Skills
+                    and build useful real-world applications.
+                </p>
+            </div>
+        </section>
+         <!--Education-->
+        <section id="education">
+            <h2 class="section-tittle">Education</h2>
+            <div class="education-card">
+                <h3>Master of computer applications (MCA)</h3>
+                <p>
+                    Suresh Gyan Vihar University,Jaipur
+                </p>
+                <p>
+                    session: 2025-2027
+                </p>
+                <h3>Bachelor of Science</h3>
+                <p>
+                    Lalit Narayan Mithila University,Darbhanga,Bihar
+                </p>
+                <p>
+                    session : 2018-2021
+                </p>
+            </div>
+        </section>
+        <!--contact-->
+        <section id="contect">
+            <h2 class="section-title">contact Me</h2>
+            <div class="contact-box">
+                <p><strong>Name:</strong>  Sanjeev kumar</p>
+                <p>
+                    <strong>Email:</strong>
+                    sk9546528@gmail.com
+                </p>
+                <p>
+                    <strong>Phone:</strong>
+                    +91 7903614867,
+                    +91 9546528083
+                </p>
+                <p>
+                    <strong>GitHub:</strong>
+                    <a href="//github.com/sk9546528-star"
+                        class="btn secondary"
+                        target="_blank">
+                        Visit GitHub
+                    </a>
+                </p>
+                <p>
+                    <strong>LinkedIn:</strong>
+                    <a href="https://www.linkedin.com/in/sanjeev-kumar-6636753a4?utm_source=share_via&utm_content=profile&utm_medium=member_android"
+                        class="btn secondary"
+                        target="_blank">
+                        Visit LinkedIn
+                    </a>
+                </p>
+            </div>
+            <!-- Projects -->
+<section id="projects">
+    <h2 class="section-title">My Projects</h2>
+
+    <div class="project-card">
+        <h3>DailyFlow — Task Management App</h3>
+
+        <p>
+            A responsive task manager where users can add, edit and delete
+            tasks, mark them completed, and search or filter their tasks.
+            It also supports categories, priorities, due dates and dark mode.
+        </p>
+
+        <p>
+            <strong>Technologies:</strong>
+            HTML, CSS, JavaScript, Local Storage
+        </p>
+
+        <a href="task-manager/index.html"
+           class="btn"
+           target="_blank"
+           rel="noopener noreferrer">
+            Open Project
+        </a>
+    </div>
+</section>
+<section id="project">
+<div class="project-card">
+    <h3>SpendWise — Personal Expense Tracker</h3>
+
+    <p>
+        Income aur expenses track karne ke liye responsive app.
+        Ismein transaction history, category filter, edit/delete,
+        balance summary aur Local Storage hai.
+    </p>
+
+    <a href="./expense-tracker/index.html"
+   class="btn"
+   target="_blank"
+   rel="noopener noreferrer">
+    Open Project
+</a>
+</div>
+ </section>
+         <!--skills-->
+        <section id="skills">
+    <h2 class="section-title">My Skills</h2>
+
+    <div class="skills-container">
+        <div class="skill-card" data-percent="100">
+            <div class="skill-circle"><span>100%</span></div>
+            <h3>HTML</h3>
+        </div>
+
+        <div class="skill-card" data-percent="100">
+            <div class="skill-circle"><span>100%</span></div>
+            <h3>CSS</h3>
+        </div>
+
+        <div class="skill-card" data-percent="80">
+            <div class="skill-circle"><span>80%</span></div>
+            <h3>JavaScript</h3>
+        </div>
+
+        <div class="skill-card" data-percent="80">
+            <div class="skill-circle"><span>80%</span></div>
+            <h3>Python</h3>
+        </div>
+
+        <div class="skill-card" data-percent="70">
+            <div class="skill-circle"><span>70%</span></div>
+            <h3>SQL</h3>
+        </div>
+
+        <div class="skill-card" data-percent="50">
+            <div class="skill-circle"><span>50%</span></div>
+            <h3>Machine Learning</h3>
+        </div>
+
+        <div class="skill-card" data-percent="50">
+            <div class="skill-circle"><span>50%</span></div>
+            <h3>Flask</h3>
+        </div>
+    </div>
+</section>
+        <!--Footer-->
+        <footer>
+            <p>
+             © 2026 Sanjeev Kumar. All Rights Reserved.   
+            </p>
+        </footer>
+
+        <script src="script.js"></script>
+    </body>
 </html>
